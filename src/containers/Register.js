@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Register from "./Register";
 import { Redirect } from 'react-router';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import "./Login.css";
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const url = useState("");
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
 
 
   function validateForm() {
@@ -22,8 +22,26 @@ export default function Login() {
   }
 
   return (
-    <div className="Login">
+    <div className="Register">
       <Form onSubmit={handleSubmit}>
+      <Form.Group size="lg" controlId="name">
+          <Form.Label>Nom</Form.Label>
+          <Form.Control
+            autoFocus
+            type="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group size="lg" controlId="lastName">
+          <Form.Label>Prénom</Form.Label>
+          <Form.Control
+            autoFocus
+            type="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </Form.Group>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -42,17 +60,9 @@ export default function Login() {
           />
         </Form.Group>
         <Button block size="lg" type="submit" disabled={!validateForm()}>
-          Login
+          Register
         </Button>
       </Form>
-      <Router>
-      <Link to="/register">Pas de compte ? C'est par ici !</Link>
-      <Switch>
-          <Route path="/register">
-            <Register />
-          </Route>
-        </Switch>
-      </Router>
     </div>
   );
 }
