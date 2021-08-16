@@ -5,11 +5,11 @@ import Nav from 'react-bootstrap/Nav'
 import "./Login.css";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
   function validateForm() {
-    return email.length > 0 && password.length > 0;
+    return login.length > 0 && password.length > 0;
   }
 
   function handleSubmit(event) {
@@ -19,17 +19,17 @@ export default function Login() {
   return (
     <div className="Login">
       <Form onSubmit={handleSubmit}>
-        <Form.Group size="lg" controlId="email">
-          <Form.Label>Email</Form.Label>
+        <Form.Group size="lg" controlId="login">
+          <Form.Label>Pseudo</Form.Label>
           <Form.Control
             autoFocus
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="login"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
           />
         </Form.Group>
         <Form.Group size="lg" controlId="password">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Mot de passe</Form.Label>
           <Form.Control
             type="password"
             value={password}
@@ -40,7 +40,7 @@ export default function Login() {
           Login
         </Button>
         <Nav.Item>
-            <Nav.Link eventKey="link-1">Pas encore de compte ?</Nav.Link>
+            <Nav.Link eventKey="./Register">Pas encore de compte ?</Nav.Link>
         </Nav.Item>
       </Form>
     </div>
