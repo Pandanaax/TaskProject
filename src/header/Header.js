@@ -1,11 +1,20 @@
-import React from 'react';
+import React from "react";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Container from "react-bootstrap/Container";
+
 function Header() {
-    return(
-        <nav class="navbar navbar-dark bg-primary">
-            <div className="row col-12 d-flex justify-content-center text-white">
-            <span className="h3">Saegus Task</span>
-            </div>
-        </nav>
-    )
+  return (
+    <Navbar bg="primary" variant="dark">
+      <Container>
+        <Navbar.Brand href="/">Saegus Task</Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link href="/">Home</Nav.Link>
+          <Nav.Link href="/login">Login</Nav.Link>
+          <Nav.Link href="/register">Register</Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
+  );
 }
 export default Header;
