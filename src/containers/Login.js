@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Register from "./Register";
-import { Redirect } from 'react-router';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import "./Login.css";
@@ -10,7 +9,6 @@ import "./Login.css";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -44,14 +42,7 @@ export default function Login() {
           Login
         </Button>
       </Form>
-      <Router>
       <Link to="/register">Pas de compte ? C'est par ici !</Link>
-      <Switch>
-          <Route path="/register">
-            <Register />
-          </Route>
-        </Switch>
-      </Router>
     </div>
   );
 }
