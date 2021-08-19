@@ -1,7 +1,7 @@
 import React from "react";
-import Home from "../containers/Home";
-import Login from "../containers/Login";
-import Register from "../containers/Register";
+import Login from "../containers/Login/Login";
+import Register from "../containers/Register/Register";
+import InputItem from "../containers/InputItem/InputItem";
 import { Switch, Route } from "react-router-dom";
 
 function RouterTask() {
@@ -14,7 +14,7 @@ function RouterTask() {
         <Register />
       </Route>
       <Route path="/">
-        <Home />
+        <InputItem />
       </Route>
     </Switch>
   );
