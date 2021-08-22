@@ -80,19 +80,17 @@ export default class InputItem extends Component {
     let token = sessionStorage.getItem("token");
     var requestOptions = {
       method: "GET",
-      body: JSON.stringify(taskData),
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     };
     fetch("http://localhost:8080/api/task/getAll", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status === "success") {
-          this.setState({
-            showTaskData: result.data,
-          });
-        }
+        this.setState({
+          showTaskData: result,
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -120,10 +118,7 @@ export default class InputItem extends Component {
         Authorization: `Bearer ${token}`,
       },
     };
-    fetch(
-      "https://todo.crazytechsolution.com/api/user/todos/" + id,
-      requestOptions
-    )
+    fetch("http://localhost:8080/api/task/getAll" + id, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.status === "success") {
@@ -175,10 +170,7 @@ export default class InputItem extends Component {
       body: urlencoded,
     };
 
-    fetch(
-      "https://todo.crazytechsolution.com/api/user/todos/" + id,
-      requestOptions
-    )
+    fetch("http://localhost:8080/api/task/getAll" + id, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.status === "success") {

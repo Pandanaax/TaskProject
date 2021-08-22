@@ -20,6 +20,7 @@ export default class Registration extends Component {
       first_name: "",
       last_name: "",
       email: "",
+      password: "",
       full_name: "",
     },
     hidden: true,
