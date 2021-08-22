@@ -13,7 +13,7 @@ function RouterTask() {
       <Route path="/register">
         <Register />
       </Route>
-      <Route path="/">
+      <Route path="/home">
         <InputItem />
       </Route>
     </Switch>
