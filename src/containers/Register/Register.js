@@ -20,7 +20,6 @@ export default class Registration extends Component {
       first_name: "",
       last_name: "",
       email: "",
-      password: "",
       full_name: "",
     },
     hidden: true,
@@ -51,7 +50,6 @@ export default class Registration extends Component {
     };
     fetch("http://localhost:8080/api/user/register", requestOptions)
       .then((response) => {
-        alert("Vous vous êtes bien enrengistré");
         return response.json();
       })
       .then((result) => {

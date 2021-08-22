@@ -22,7 +22,7 @@ export default class InputItem extends Component {
         title: "",
         description: "",
         date: new Date(),
-        status: "",
+        status: "en cours",
       },
       showTaskData: [],
       successAlertMsg: "",
@@ -41,37 +41,34 @@ export default class InputItem extends Component {
   }
 
   addItem = () => {
+    const { taskData } = this.state;
     let token = sessionStorage.getItem("token");
-    var formdata = new FormData();
-    formdata.append("title", this.state.taskData.title);
-    formdata.append("description", this.state.taskData.description);
-    formdata.append("date", this.state.taskData.date);
     var requestOptions = {
       method: "POST",
-      body: formdata,
+      body: JSON.stringify(taskData),
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     };
-    fetch("https://todo.crazytechsolution.com/api/user/todos", requestOptions)
+    fetch("http://localhost:8080/api/task/create", requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         if (result.status === "success") {
           this.setState({ successAlertMsg: result.message }, () =>
-            this.getTaskData()
+            this.setState({
+              taskData: {
+                title: "",
+                description: "",
+                date: new Date(),
+                status: "en cours",
+              },
+            })
           );
           setTimeout(() => {
             this.setState({ successAlertMsg: "" });
           }, 1000);
-        }
-        if (result.error === false) {
-          this.setState({
-            taskData: {
-              title: "",
-              description: "",
-              date: null,
-            },
-          });
         }
       })
       .catch((error) => {
@@ -79,14 +76,16 @@ export default class InputItem extends Component {
       });
   };
   getTaskData() {
+    const { taskData } = this.state;
     let token = sessionStorage.getItem("token");
     var requestOptions = {
       method: "GET",
+      body: JSON.stringify(taskData),
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    fetch("https://todo.crazytechsolution.com/api/user/todos", requestOptions)
+    fetch("http://localhost:8080/api/task/getAll", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.status === "success") {
