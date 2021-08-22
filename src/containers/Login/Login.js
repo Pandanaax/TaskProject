@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 import "./Login.css";
 import showPwd from "../../image/showPwd.png";
 import hidePwd from "../../image/hidePwd.png";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 import { Redirect } from "react-router-dom";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#F2AA4CFF",

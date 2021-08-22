@@ -5,9 +5,9 @@ import { Container } from "reactstrap";
 import "./Register.css";
 import showPwd from "../../image/showPwd.png";
 import hidePwd from "../../image/hidePwd.png";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#F2AA4CFF",
@@ -24,11 +24,6 @@ export default class Registration extends Component {
       full_name: "",
     },
     hidden: true,
-    errMsgFirstName: "",
-    errMsgLastName: "",
-    errMsgEmail: "",
-    errMsgPassword: "",
-    successMsg: "",
     error: false,
   };
   toggleShow = () => {
@@ -54,7 +49,7 @@ export default class Registration extends Component {
         return response.json();
       })
       .then((result) => {
-        if (result.status === "success") {
+        if (result) {
           this.setState({
             signupData: {
               first_name: "",
@@ -62,38 +57,7 @@ export default class Registration extends Component {
               password: "",
               email: "",
             },
-            errMsgFirstName: "",
-            errMsgLastName: "",
-            errMsgEmail: "",
-            errMsgPassword: "",
             error: false,
-          });
-        }
-        setTimeout(() => {
-          this.setState({ successMsg: result.message });
-        }, 1000);
-        if (result.status === "error" && result.validation_errors.first_name) {
-          this.setState({
-            error: true,
-            errMsgFirstName: result.validation_errors.first_name[0],
-          });
-        }
-        if (result.status === "error" && result.validation_errors.last_name) {
-          this.setState({
-            error: true,
-            errMsgLastName: result.validation_errors.last_name[0],
-          });
-        }
-        if (result.status === "error" && result.validation_errors.email) {
-          this.setState({
-            error: true,
-            errMsgEmail: result.validation_errors.email[0],
-          });
-        }
-        if (result.status === "error" && result.validation_errors.password) {
-          this.setState({
-            error: true,
-            errMsgPassword: result.validation_errors.password[0],
           });
         }
       })
@@ -172,7 +136,6 @@ export default class Registration extends Component {
                 className="eyeIcon"
               />
             </div>
-            <div class=" alert-success pl-5">{this.state.successMsg}</div>
             <Button
               variant="contained"
               fullWidth
