@@ -43,16 +43,20 @@ export default class Login extends Component {
   };
 
   onSubmitHandler = () => {
-    var formdata = new FormData();
-    formdata.append("email", this.state.loginData.email);
-    formdata.append("password", this.state.loginData.password);
+    const { loginData } = this.state;
 
     var requestOptions = {
       method: "POST",
-      body: formdata,
+      body: JSON.stringify(loginData),
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
-    fetch("https://todo.crazytechsolution.com/api/user/login", requestOptions)
-      .then((response) => response.json())
+    fetch("http://localhost:8080/api/user/login", requestOptions)
+      .then((response) => {
+        console.log("Vous êtes bien connecté");
+        return response.json();
+      })
       .then((result) => {
         if (result.status === "success") {
           this.setState({ accessToken: result.token });

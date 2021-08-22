@@ -3,7 +3,6 @@ import { Button, Container } from "reactstrap";
 import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
 import TodoList from "../TodoList/TodoList";
-import DatePicker from "react-datepicker";
 import "./style.css";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import EditTodo from "../EditTodo/EditTodo.js";

@@ -40,19 +40,20 @@ export default class Registration extends Component {
     this.setState({ signupData });
   };
   onSubmitHandler = (e) => {
+    const { signupData } = this.state;
     e.preventDefault();
-    var formdata = new FormData();
-    formdata.append("first_name", this.state.signupData.first_name);
-    formdata.append("last_name", this.state.signupData.last_name);
-    formdata.append("email", this.state.signupData.email);
-    formdata.append("password", this.state.signupData.password);
-
     var requestOptions = {
       method: "POST",
-      body: formdata,
+      body: JSON.stringify(signupData),
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
-    fetch("http://localhost:3001/register", requestOptions)
-      .then((response) => response.json())
+    fetch("http://localhost:8080/api/user/register", requestOptions)
+      .then((response) => {
+        alert("Vous vous êtes bien enrengistré");
+        return response.json();
+      })
       .then((result) => {
         if (result.status === "success") {
           this.setState({
