@@ -5,9 +5,10 @@ import { Container } from "reactstrap";
 import "./Register.css";
 import showPwd from "../../image/showPwd.png";
 import hidePwd from "../../image/hidePwd.png";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { Redirect } from "react-router-dom";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#F2AA4CFF",
@@ -24,11 +25,6 @@ export default class Registration extends Component {
       full_name: "",
     },
     hidden: true,
-    errMsgFirstName: "",
-    errMsgLastName: "",
-    errMsgEmail: "",
-    errMsgPassword: "",
-    successMsg: "",
     error: false,
   };
   toggleShow = () => {
@@ -40,21 +36,21 @@ export default class Registration extends Component {
     this.setState({ signupData });
   };
   onSubmitHandler = (e) => {
+    const { signupData } = this.state;
     e.preventDefault();
-    var formdata = new FormData();
-    formdata.append("first_name", this.state.signupData.first_name);
-    formdata.append("last_name", this.state.signupData.last_name);
-    formdata.append("email", this.state.signupData.email);
-    formdata.append("password", this.state.signupData.password);
-
     var requestOptions = {
       method: "POST",
-      body: formdata,
+      body: JSON.stringify(signupData),
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
-    fetch("http://localhost:3001/register", requestOptions)
-      .then((response) => response.json())
+    fetch("http://localhost:8080/api/user/register", requestOptions)
+      .then((response) => {
+        return response.json();
+      })
       .then((result) => {
-        if (result.status === "success") {
+        if (result.token) {
           this.setState({
             signupData: {
               first_name: "",
@@ -62,38 +58,6 @@ export default class Registration extends Component {
               password: "",
               email: "",
             },
-            errMsgFirstName: "",
-            errMsgLastName: "",
-            errMsgEmail: "",
-            errMsgPassword: "",
-            error: false,
-          });
-        }
-        setTimeout(() => {
-          this.setState({ successMsg: result.message });
-        }, 1000);
-        if (result.status === "error" && result.validation_errors.first_name) {
-          this.setState({
-            error: true,
-            errMsgFirstName: result.validation_errors.first_name[0],
-          });
-        }
-        if (result.status === "error" && result.validation_errors.last_name) {
-          this.setState({
-            error: true,
-            errMsgLastName: result.validation_errors.last_name[0],
-          });
-        }
-        if (result.status === "error" && result.validation_errors.email) {
-          this.setState({
-            error: true,
-            errMsgEmail: result.validation_errors.email[0],
-          });
-        }
-        if (result.status === "error" && result.validation_errors.password) {
-          this.setState({
-            error: true,
-            errMsgPassword: result.validation_errors.password[0],
           });
         }
       })
@@ -103,6 +67,9 @@ export default class Registration extends Component {
   };
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/login" />;
+    }
     return (
       <Container className="themed-container mt-2" fluid="sm">
         <div className="text-center">
@@ -172,7 +139,6 @@ export default class Registration extends Component {
                 className="eyeIcon"
               />
             </div>
-            <div class=" alert-success pl-5">{this.state.successMsg}</div>
             <Button
               variant="contained"
               fullWidth

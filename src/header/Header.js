@@ -7,9 +7,9 @@ function Header() {
   return (
     <Navbar bg="primary" variant="dark">
       <Container>
-        <Navbar.Brand href="/">Saegus Task</Navbar.Brand>
+        <Navbar.Brand href="/home">Saegus Task</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link href="/">Home</Nav.Link>
+          <Nav.Link href="/home">Home</Nav.Link>
           <Nav.Link href="/login">Login</Nav.Link>
           <Nav.Link href="/register">Register</Nav.Link>
         </Nav>

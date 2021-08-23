@@ -3,11 +3,10 @@ import { Button, Container } from "reactstrap";
 import TextField from "@material-ui/core/TextField";
 import { Redirect } from "react-router-dom";
 import TodoList from "../TodoList/TodoList";
-import DatePicker from "react-datepicker";
 import "./style.css";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 import EditTodo from "../EditTodo/EditTodo.js";
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#F2AA4CFF",
@@ -23,7 +22,7 @@ export default class InputItem extends Component {
         title: "",
         description: "",
         date: new Date(),
-        status: "",
+        status: "en cours",
       },
       showTaskData: [],
       successAlertMsg: "",
@@ -42,37 +41,34 @@ export default class InputItem extends Component {
   }
 
   addItem = () => {
+    const { taskData } = this.state;
     let token = sessionStorage.getItem("token");
-    var formdata = new FormData();
-    formdata.append("title", this.state.taskData.title);
-    formdata.append("description", this.state.taskData.description);
-    formdata.append("date", this.state.taskData.date);
     var requestOptions = {
       method: "POST",
-      body: formdata,
+      body: JSON.stringify(taskData),
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     };
-    fetch("https://todo.crazytechsolution.com/api/user/todos", requestOptions)
+    fetch("http://localhost:8080/api/task/create", requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         if (result.status === "success") {
           this.setState({ successAlertMsg: result.message }, () =>
-            this.getTaskData()
+            this.setState({
+              taskData: {
+                title: "",
+                description: "",
+                date: new Date(),
+                status: "en cours",
+              },
+            })
           );
           setTimeout(() => {
             this.setState({ successAlertMsg: "" });
           }, 1000);
-        }
-        if (result.error === false) {
-          this.setState({
-            taskData: {
-              title: "",
-              description: "",
-              date: null,
-            },
-          });
         }
       })
       .catch((error) => {
@@ -80,21 +76,21 @@ export default class InputItem extends Component {
       });
   };
   getTaskData() {
+    const { taskData } = this.state;
     let token = sessionStorage.getItem("token");
     var requestOptions = {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     };
-    fetch("https://todo.crazytechsolution.com/api/user/todos", requestOptions)
+    fetch("http://localhost:8080/api/task/getAll", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status === "success") {
-          this.setState({
-            showTaskData: result.data,
-          });
-        }
+        this.setState({
+          showTaskData: result,
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -122,16 +118,13 @@ export default class InputItem extends Component {
         Authorization: `Bearer ${token}`,
       },
     };
-    fetch(
-      "https://todo.crazytechsolution.com/api/user/todos/" + id,
-      requestOptions
-    )
+    fetch("http://localhost:8080/api/task/getAll" + id, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status === "success") {
+        if (result) {
           this.setState(
             {
-              todoDeleteMsg: result.message,
+              todoDeleteMsg: result,
             },
             () => this.getTaskData()
           );
@@ -177,13 +170,10 @@ export default class InputItem extends Component {
       body: urlencoded,
     };
 
-    fetch(
-      "https://todo.crazytechsolution.com/api/user/todos/" + id,
-      requestOptions
-    )
+    fetch("http://localhost:8080/api/task/getAll" + id, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status === "success") {
+        if (result) {
           this.setState(
             {
               editTaskDataModal: false,
@@ -197,7 +187,7 @@ export default class InputItem extends Component {
         }
         if (result.errors === false) {
           this.setState({
-            successTodoUpdatedMsg: result.message,
+            successTodoUpdatedMsg: result,
           });
         }
       })
@@ -253,7 +243,6 @@ export default class InputItem extends Component {
           </ThemeProvider>
         </div>
         <div class="text-success p-4 mt-2">{this.state.successAlertMsg}</div>
-        {/*TODO list  */}
         <TodoList
           showTaskData={this.state.showTaskData}
           clearList={this.clearList}
@@ -262,7 +251,6 @@ export default class InputItem extends Component {
           editTodo={this.editTodo}
           toggleEditTaskModal={this.toggleEditTaskModal}
         />
-        {/* Model for Edit Todo */}
         <EditTodo
           toggleEditTaskModal={this.toggleEditTaskModal}
           editTaskDataModal={this.state.editTaskDataModal}

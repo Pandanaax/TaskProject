@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 import "./Login.css";
 import showPwd from "../../image/showPwd.png";
 import hidePwd from "../../image/hidePwd.png";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 import { Redirect } from "react-router-dom";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#F2AA4CFF",
@@ -43,56 +43,36 @@ export default class Login extends Component {
   };
 
   onSubmitHandler = () => {
-    var formdata = new FormData();
-    formdata.append("email", this.state.loginData.email);
-    formdata.append("password", this.state.loginData.password);
+    const { loginData } = this.state;
 
     var requestOptions = {
       method: "POST",
-      body: formdata,
+      body: JSON.stringify(loginData),
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
-    fetch("https://todo.crazytechsolution.com/api/user/login", requestOptions)
-      .then((response) => response.json())
+    fetch("http://localhost:8080/api/user/login", requestOptions)
+      .then((response) => {
+        return response.json();
+      })
       .then((result) => {
-        if (result.status === "success") {
+        if (result.token) {
           this.setState({ accessToken: result.token });
           sessionStorage.setItem("token", this.state.accessToken);
           sessionStorage.setItem("userName", this.state.loginData.email);
           sessionStorage.setItem("isLoggedIn", true);
         }
-        if (result.status === "failed") {
-          this.setState({
-            errMsg: result.message,
-          });
-        }
-        if (result.status === "error" && result.validation_errors.email) {
-          this.setState({
-            error: true,
-            errMsgEmail: result.validation_errors.email[0],
-          });
-        }
-        if (result.status === "error" && result.validation_errors.password) {
-          this.setState({
-            error: true,
-            errMsgPassword: result.validation_errors.password[0],
-          });
-        }
-        if (result.error === false) {
-          this.setState({ redirect: true });
-        }
       })
       .catch((error) => {
-        console.log("errro", error);
+        console.log("error", error);
       });
   };
 
   render() {
     const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-    if (this.state.redirect) {
-      return <Redirect to="/todo" />;
-    }
-    if (isLoggedIn) {
-      return <Redirect to="/todo" />;
+    if (this.state.redirect || isLoggedIn) {
+      return <Redirect to="/home" />;
     }
     return (
       <Container className="themed-container mt-2" fluid="sm">
