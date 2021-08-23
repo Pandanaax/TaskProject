@@ -5,6 +5,7 @@ import { Container } from "reactstrap";
 import "./Register.css";
 import showPwd from "../../image/showPwd.png";
 import hidePwd from "../../image/hidePwd.png";
+import { Redirect } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 
 const theme = createTheme({
@@ -49,7 +50,7 @@ export default class Registration extends Component {
         return response.json();
       })
       .then((result) => {
-        if (result) {
+        if (result.token) {
           this.setState({
             signupData: {
               first_name: "",
@@ -57,7 +58,6 @@ export default class Registration extends Component {
               password: "",
               email: "",
             },
-            error: false,
           });
         }
       })
@@ -67,6 +67,9 @@ export default class Registration extends Component {
   };
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/login" />;
+    }
     return (
       <Container className="themed-container mt-2" fluid="sm">
         <div className="text-center">
